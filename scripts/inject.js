@@ -59,6 +59,45 @@ const emailTargets = [
   }
 ]
 
+function addCcEmail(ccEmail){
+  const input = document.querySelectorAll('input[aria-label="참조 수신자"]');
+  console.log('input', input);
+  if (input.length === 0) return alert('참조 수신자 필드가 없습니다.');
+
+  if (input.length === 1 && !input[0].value.includes(ccEmail)) {
+    if (input[0].value.length === 0) {
+      input[0].value = ccEmail;
+    }else{
+      input[0].value += `,${ccEmail}`;
+    }
+  }else if (input.length > 1 && !input[input.length - 1].value.includes(ccEmail)){
+    if (input[input.length - 1].value.length === 0) {
+      input[input.length - 1].value = ccEmail;
+    }else{
+      input[input.length - 1].value += `,${ccEmail}`;
+    }
+  }
+}
+function addBccEmail(bccEmail){
+  const input = document.querySelectorAll('input[aria-label="숨은참조 수신자"]');
+  console.log('input', input);
+  if (input.length === 0) return alert('숨은참조 수신자 필드가 없습니다.');
+
+  if (input.length === 1 && !input[0].value.includes(bccEmail)) {
+    if (input[0].value.length === 0) {
+      input[0].value = bccEmail
+    }else{
+      input[0].value += `,${bccEmail}`;
+    }
+  }else if (input.length > 1 && !input[input.length - 1].value.includes(bccEmail)){
+    if (input[input.length - 1].value.length === 0) {
+      input[input.length - 1].value = bccEmail;
+    }else{
+      input[input.length - 1].value += `,${bccEmail}`;
+    }
+  }
+}
+
 const observeToFieldFocus = (toField) => {
   console.log('observeToFieldFocus 호출됨', toField);
   if (!toField) {
@@ -74,18 +113,22 @@ const observeToFieldFocus = (toField) => {
     });
 
     toField.addEventListener('input', () => {
-      const newValue = toField.value;
+      const newValue = toField.value.trim();
       if (newValue === lastValue) return;
 
       lastValue = newValue;
       console.log('✏️ 수신자 입력값:', newValue);
-      chrome.storage.sync.get('email', (result) => {
-        const savedEmail = result.email;
-        if (savedEmail === newValue.trim()){
-          console.log('✅ 저장된 이메일과 일치합니다.');
-        } else {
-          console.log('❌ 저장된 이메일과 일치하지 않습니다.');
-        }
+      chrome.storage.sync.get('emailTargets', ({emailTargets}) => {
+
+        emailTargets.forEach(target => {
+          if (target.to === newValue.trim()){
+            console.log(`✅ 저장된 이메일(${target.to})과 일치합니다.`);
+            addCcEmail(target.cc);
+            addBccEmail(target.bcc);
+          } else {
+            console.log('❌ 저장된 이메일과 일치하지 않습니다.');
+          }
+        })
       });
 
 
