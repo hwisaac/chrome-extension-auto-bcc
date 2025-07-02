@@ -28,6 +28,12 @@ const ccEmailInput = document.getElementById('ccEmail');
 const bccEmailInput = document.getElementById('bccEmail');
 const saveBtn = document.getElementById('saveBtn');
 
+function initInputs() {
+  emailInput.value = '';
+  ccEmailInput.value = '';
+  bccEmailInput.value = '';
+}
+
 // 저장된 데이터 불러오기
 function loadSavedData() {
   chrome.storage.sync.get('emailTargets', function (result) {
@@ -35,18 +41,30 @@ function loadSavedData() {
   });
 }
 
+function deleteTarget(ulIndex){
+
+  chrome.storage.sync.get('emailTargets', function (result) {
+    const emailTargets = result.emailTargets;
+    const newEmailTargets = emailTargets.filter((_, index) => index !== ulIndex);
+    chrome.storage.sync.set({ emailTargets: newEmailTargets }, ()=> renderEmailTargets(newEmailTargets));
+  });
+
+}
+
 // 렌더링 함수
 function renderEmailTargets(emailTargets) {
   const emailTargetsDiv = document.getElementById('emailTargets');
   if (!emailTargetsDiv) return;
   emailTargetsDiv.innerHTML = '';
-  emailTargets.forEach((target) => {
+  emailTargets.forEach((target, ulIndex) => {
     const ul = document.createElement('ul');
     ul.innerHTML = `
       <li>To: ${target.to}</li>
       <li>Cc: ${target.cc}</li>
       <li>Bcc: ${target.bcc}</li>
     `;
+    
+    ul.addEventListener('click', () => deleteTarget(ulIndex));
     emailTargetsDiv.appendChild(ul);
   });
 }
@@ -76,6 +94,7 @@ async function saveData() {
 
     chrome.storage.sync.set({ emailTargets }, function () {
       renderEmailTargets(emailTargets);
+      initInputs();
     });
   });
 
