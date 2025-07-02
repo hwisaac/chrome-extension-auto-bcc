@@ -1,0 +1,20 @@
+{
+    "name": "My Extension",
+    "description": "My Extension Description",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions": [
+        "activeTab",
+        "storage",
+        "notifications"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["scripts/inject.js"]
+        }
+    ]
+}
