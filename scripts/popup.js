@@ -1,50 +1,85 @@
 // Content script - 웹페이지에서 실행됨
-console.log('Popup script loaded');
+console.error('Popup script loaded');
+const stringify = (obj) => JSON.stringify(obj);
+const parse = (str) => JSON.parse(str);
+
+// helper: get storage
+function getStorage(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(key, (result) => {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      else resolve(result[key]);
+    });
+  });
+}
+
+// helper: set storage
+function setStorage(obj) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.set(obj, () => {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      else resolve();
+    });
+  });
+}
 
 const emailInput = document.getElementById('email');
 const ccEmailInput = document.getElementById('ccEmail');
 const bccEmailInput = document.getElementById('bccEmail');
 const saveBtn = document.getElementById('saveBtn');
 
-const savedEmailSpan = document.getElementById('savedEmail');
-const savedCcEmailSpan = document.getElementById('savedCcEmail');
-const savedBccEmailSpan = document.getElementById('savedBccEmail');
-
 // 저장된 데이터 불러오기
 function loadSavedData() {
-  chrome.storage.sync.get(['email', 'ccEmail', 'bccEmail'], function (result) {
-    if (result.email) {
-      emailInput.value = result.email;
-      savedEmailSpan.textContent = result.email;
-    }
-    if (result.ccEmail) {
-      ccEmailInput.value = result.ccEmail;
-      savedCcEmailSpan.textContent = result.ccEmail;
-    }
-    if (result.bccEmail) {
-      bccEmailInput.value = result.bccEmail;
-      savedBccEmailSpan.textContent = result.bccEmail;
-    }
+  chrome.storage.sync.get('emailTargets', function (result) {
+    renderEmailTargets(result.emailTargets);
+  });
+}
+
+// 렌더링 함수
+function renderEmailTargets(emailTargets) {
+  const emailTargetsDiv = document.getElementById('emailTargets');
+  if (!emailTargetsDiv) return;
+  emailTargetsDiv.innerHTML = '';
+  emailTargets.forEach((target) => {
+    const ul = document.createElement('ul');
+    ul.innerHTML = `
+      <li>To: ${target.to}</li>
+      <li>Cc: ${target.cc}</li>
+      <li>Bcc: ${target.bcc}</li>
+    `;
+    emailTargetsDiv.appendChild(ul);
   });
 }
 
 // 데이터 저장하기
-function saveData() {
-  const emailData = {
-    email: emailInput.value,
-    ccEmail: ccEmailInput.value,
-    bccEmail: bccEmailInput.value,
-  };
+async function saveData() {
+  console.error('save 버튼 클릭!');
+  let emailTargets = [];
+  chrome.storage.sync.get('emailTargets', function (result) {
+    if (
+      result &&
+      typeof result === 'object' &&
+      Object.keys(result).length === 0
+    ) {
+      emailTargets = [];
+    } else if (result.length === 0) {
+      emailTargets = [];
+    } else {
+      emailTargets = result.emailTargets;
+    }
 
-  chrome.storage.sync.set(emailData, function () {
-    // 저장된 데이터를 화면에 표시
-    savedEmailSpan.textContent = emailData.email;
-    savedCcEmailSpan.textContent = emailData.ccEmail;
-    savedBccEmailSpan.textContent = emailData.bccEmail;
+    emailTargets.push({
+      to: document.getElementById('email').value,
+      cc: document.getElementById('ccEmail').value,
+      bcc: document.getElementById('bccEmail').value,
+    });
 
-    // 저장 완료 알림
-    alert('데이터가 저장되었습니다!');
+    chrome.storage.sync.set({ emailTargets }, function () {
+      renderEmailTargets(emailTargets);
+    });
   });
+
+  
 }
 
 // 이벤트 리스너 등록
