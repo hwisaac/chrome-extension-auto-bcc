@@ -54,13 +54,13 @@ function checkCcBccEnabled() {
     const foundBtn = ccEnableBtn[ccEnableBtn.length - 1];
     // console.log('ccEnableBtn 클릭', foundBtn);
     foundBtn.click();
-    toInput.focus();
+    
   }
   if (bccEnableBtn.length > 0) {
     const foundBtn = bccEnableBtn[bccEnableBtn.length - 1];
     // console.log('bccEnableBtn 클릭', foundBtn);
     foundBtn.click();
-    toInput.focus();
+    
   }
 }
 
