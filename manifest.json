@@ -18,8 +18,8 @@
         }
     ],
     "icons" : {
-        "16" : "logo_small",
-        "48" : "logo_small",
-        "128" : "logo_small"
+        "16" : "logo_small.png",
+        "48" : "logo_small.png",
+        "128" : "logo_small.png"
     }
 }
