@@ -132,7 +132,7 @@ const observedToFields = new Set();
 
 const observeToFieldFocus = (toField) => {
   if (!toField || observedToFields.has(toField)) {
-    return console.log('✅ 이미 이벤트 등록됨 또는 필드 없음');
+    return
   }
   console.log('observeToFieldFocus 호출됨', toField);
 
@@ -141,7 +141,7 @@ const observeToFieldFocus = (toField) => {
   console.log('toField 에 이벤트를 등록합니다.');
 
   toField.addEventListener('focus', () => {
-    console.log('✅ 수신자 필드에 포커스됨');
+    // console.log('✅ 수신자 필드에 포커스됨');
     chrome.runtime.sendMessage({ action: 'toFieldFocused' });
   });
 
@@ -181,7 +181,7 @@ let foundCount = 0;
 let prevLength = 0;
 // Gmail이 SPA라서 반복해서 감지 필요
 const intervalId = setInterval(() => {
-  console.log('setInterval');
+  // console.log('setInterval');
   // const toField = document.querySelector('div[aria-label="검색창"]');
   const toFields = document.querySelectorAll('input[aria-label="수신자"]');
   if (!toFields) return console.log('toField 발견 실패');
