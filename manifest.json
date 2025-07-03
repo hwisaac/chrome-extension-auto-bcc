@@ -1,6 +1,6 @@
 {
-    "name": "My Extension",
-    "description": "My Extension Description",
+    "name": "Barun Auto CC/BCC",
+    "description": "gmail 에서 참조 수신자 필드 자동 추가",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
@@ -16,5 +16,10 @@
             "matches": ["<all_urls>"],
             "js": ["scripts/inject.js"]
         }
-    ]
+    ],
+    "icons" : {
+        "16" : "logo.png",
+        "48" : "logo.png",
+        "128" : "logo.png"
+    }
 }

@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body style="width: 300px; height: 200px; padding: 20px;">
-    <h1>Hello World2</h1>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body style="width: 300px; height: 200px; padding: 20px">
+    <h1>Barun Auto CC/BCC</h1>
     <ul>
-        <li><input type="email" id="email" placeholder="Email" /></li>
-        <li><input type="text" id="ccEmail" placeholder="CC Email" /></li>
-        <li><input type="text" id="bccEmail" placeholder="BCC Email" /></li>
+      <li>
+        <span class="label">Email </span>
+        <input type="email" id="email" placeholder="Email" />
+      </li>
+      <li>
+        <span class="label">CC </span>
+        <input type="text" id="ccEmail" placeholder="CC Email" />
+      </li>
+      <li>
+        <span class="label">BCC </span>
+        <input type="text" id="bccEmail" placeholder="BCC Email" />
+      </li>
     </ul>
     <button id="saveBtn">Save</button>
 
-    <h2>Email Targets</h2>
-    <div id="emailTargets">
-    </div>
-
-    <p>받는 사람 input focus 여부 : <span id="isEmailSelected"></span></p>
+    <h2>저장됨</h2>
+    <div id="emailTargets" style="padding-bottom: 20px"></div>
 
     <script src="scripts/popup.js"></script>
-
-</body>
+  </body>
 </html>
