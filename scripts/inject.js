@@ -11,17 +11,15 @@ const emailTargets = [
 function addCcEmail(ccEmail) {
   if (!ccEmail) return;
   const input = document.querySelectorAll('input[aria-label^="참조 수신자"]');
-  console.log('input', input);
   if (input.length === 0) {
     return console.log('참조 수신자 필드가 없습니다.');
   }
+  if(input[input.length - 1].value.includes(ccEmail)) return 
 
-  if (input.length > 0 && !input[input.length - 1].value.includes(ccEmail)) {
-    if (input[input.length - 1].value.length === 0) {
-      input[input.length - 1].value = ccEmail;
-    } else {
-      input[input.length - 1].value += `,${ccEmail}`;
-    }
+  if (input[input.length - 1].value.length === 0) {
+    input[input.length - 1].value = ccEmail;
+  } else {
+    input[input.length - 1].value += `,${ccEmail}`;
   }
 }
 function addBccEmail(bccEmail) {
@@ -33,12 +31,12 @@ function addBccEmail(bccEmail) {
   if (input.length === 0)
     return console.log('숨은참조 수신자 필드가 없습니다.');
 
-  if ( !input[input.length - 1].value.includes(bccEmail)) {
-    if (input[input.length - 1].value.length === 0) {
-      input[input.length - 1].value = bccEmail;
-    } else {
-      input[input.length - 1].value += `,${bccEmail}`;
-    }
+  if (input[input.length - 1].value.includes(bccEmail)) return;
+
+  if (input[input.length - 1].value.length === 0) {
+    input[input.length - 1].value = bccEmail;
+  } else {
+    input[input.length - 1].value += `,${bccEmail}`;
   }
 }
 
@@ -54,13 +52,11 @@ function checkCcBccEnabled() {
     const foundBtn = ccEnableBtn[ccEnableBtn.length - 1];
     // console.log('ccEnableBtn 클릭', foundBtn);
     foundBtn.click();
-    
   }
   if (bccEnableBtn.length > 0) {
     const foundBtn = bccEnableBtn[bccEnableBtn.length - 1];
     // console.log('bccEnableBtn 클릭', foundBtn);
     foundBtn.click();
-    
   }
 }
 
@@ -87,9 +83,6 @@ function getEmails(toField) {
   });
   return result;
 }
-
-let foundCount = 0;
-let prevLength = 0;
 
 let prevFromEmail = '';
 setInterval(() => {
